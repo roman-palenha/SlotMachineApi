@@ -57,8 +57,8 @@ namespace SlotMachineApi.Controllers
         }
 
         [HttpGet]
-        [Route("{username}/{bet}")]
-        public async Task<IActionResult> Bet([FromRoute] string username, double bet)
+        [Route("{username}/{machineId}/{bet}")]
+        public async Task<IActionResult> Bet([FromRoute] string username, double bet, string machineId)
         {
             var user = await _playerService.GetByNameAsync(username);
             var newBalance = user.Balance - bet;
@@ -68,14 +68,14 @@ namespace SlotMachineApi.Controllers
             }
             await _playerService.UpdateBalanceAsync(username, newBalance);
 
-            var machine = await _machineService.Create(new Machine());
+            var machine = await _machineService.GetById(machineId);
 
             var resultArray = _machineService.ReturnSlotsArray(machine);
             var firstNumFromArray = resultArray[0];
             var consecutiveIdenticalDigits = resultArray.TakeWhile(x => x == firstNumFromArray);
             var win  = consecutiveIdenticalDigits.Sum(x => x) * bet;
 
-           await _playerService.UpdateBalanceAsync(username, user.Balance + win);
+            await _playerService.UpdateBalanceAsync(username, user.Balance + win);
 
             var res = new SpinResult { Slots = resultArray, Balance = user.Balance, Win = win };
 
