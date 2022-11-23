@@ -43,7 +43,7 @@ namespace SlotMachineApi.Controllers
         }
 
         [HttpPut("{username}")]
-        public async Task<IActionResult> UpdateBalance(string username, double balance)
+        public async Task<IActionResult> UpdateBalance(string username, [FromBody]double balance)
         {
             try
             {
@@ -70,18 +70,16 @@ namespace SlotMachineApi.Controllers
             {
                 return BadRequest();
             }
-            await _playerService.UpdateBalanceAsync(username, newBalance);
 
             var machine = await _machineService.GetById(machineId);
-
             var resultArray = _machineService.ReturnSlotsArray(machine);
             var firstNumFromArray = resultArray[0];
             var consecutiveIdenticalDigits = resultArray.TakeWhile(x => x == firstNumFromArray);
             var win  = consecutiveIdenticalDigits.Sum(x => x) * bet;
+            newBalance += win;
+            await _playerService.UpdateBalanceAsync(username, newBalance);
 
-            await _playerService.UpdateBalanceAsync(username, user.Balance + win);
-
-            var res = new SpinResult { Slots = resultArray, Balance = user.Balance, Win = win };
+            var res = new SpinResult { Slots = resultArray, Balance = newBalance, Win = win };
 
            return Ok(res);
 

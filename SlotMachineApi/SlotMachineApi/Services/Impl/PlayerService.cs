@@ -60,6 +60,9 @@ namespace SlotMachineApi.Services.Impl
             if (player == null)
                 throw new ArgumentException("There is not a user with same username");
 
+            if(balance < 0)
+                throw new ArgumentException("Negative balance");
+
             player.Balance = balance;
             
             await _playersCollection.ReplaceOneAsync(x => x.UserName.Equals(username), player);
