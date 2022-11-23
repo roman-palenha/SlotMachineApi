@@ -34,7 +34,7 @@ namespace SlotMachineApi.Controllers
                     Balance = registerPlayer.Balance
                 };
                 await _playerService.CreateAsync(player);
-                return Ok();
+                return Ok(player);
             }
             catch(Exception ex)
             {
@@ -58,7 +58,7 @@ namespace SlotMachineApi.Controllers
 
         [HttpGet]
         [Route("{username}/{bet}")]
-        public async Task<IActionResult> Bet(string username, double bet)
+        public async Task<IActionResult> Bet([FromRoute] string username, double bet)
         {
             var user = await _playerService.GetByNameAsync(username);
             var newBalance = user.Balance - bet;
