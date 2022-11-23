@@ -2,10 +2,11 @@
 
 namespace SlotMachineApi.Services
 {
-    public interface IGameService
+    public interface IMachineService
     {
-         Task Update(Game game, int newSize);
-         int[] ReturnSlotsArray(Game game);
-
+        Task RefreshArray(string id, int newSize);
+        int[] ReturnSlotsArray(Machine game);
+        Task<Machine> GetById(string id);
+        Task<Machine> Create(Machine game);
     }
 }

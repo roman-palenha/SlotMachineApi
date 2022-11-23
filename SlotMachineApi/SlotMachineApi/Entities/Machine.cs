@@ -1,9 +1,8 @@
 ﻿namespace SlotMachineApi.Entities
 {
-    public class Game
+    public class Machine
     {
         public int Id { get; set; }
-        public bool IsAWin { get; set; }
         public int SlotsSize { get; set; }
     }
 }

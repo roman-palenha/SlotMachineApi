@@ -3,15 +3,17 @@ using MongoDB.Driver;
 using SlotMachineApi.DbSettings;
 using SlotMachineApi.Entities;
 using System;
+using System.Numerics;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace SlotMachineApi.Services.Impl
 {
-    public class GameService: IGameService
-    {
-        private readonly IMongoCollection<Game> _gameCollection;
+    public class MachineService :  IMachineService
 
-        public GameService(
+    {
+        private readonly IMongoCollection<Machine> _gameCollection;
+
+        public MachineService(
           IOptions<SlotMachineDatabaseSettings> slotMachineDatabaseSettings)
         {
             var mongoClient = new MongoClient(
@@ -20,10 +22,10 @@ namespace SlotMachineApi.Services.Impl
             var mongoDatabase = mongoClient.GetDatabase(
                 slotMachineDatabaseSettings.Value.DatabaseName);
 
-            _gameCollection = mongoDatabase.GetCollection<Game>(
+            _gameCollection = mongoDatabase.GetCollection<Machine>(
             slotMachineDatabaseSettings.Value.GamesCollectionName);
         }
-        public int[] ReturnSlotsArray(Game game)
+        public int[] ReturnSlotsArray(Machine game)
         {
             Random randNum = new Random();
 
@@ -34,11 +36,25 @@ namespace SlotMachineApi.Services.Impl
             return slotsArray;
         }
 
-        public async Task Update(Game game, int newSize)
+        public async Task RefreshArray(string id, int newSize)
         {
+            var game = await GetById(id);
+
             game.SlotsSize = newSize;
 
             await _gameCollection.ReplaceOneAsync(x=> x.Id.Equals(game.Id), game);
+        }
+        public async Task<Machine> GetById(string id)
+        {
+            var result = await _gameCollection
+                    .Find(x => x.Id.Equals(id))
+                    .FirstOrDefaultAsync();
+            return result;
+        }
+        public async Task<Machine> Create(Machine game)
+        {
+            await _gameCollection.InsertOneAsync(game);
+            return game;
         }
     }
 }

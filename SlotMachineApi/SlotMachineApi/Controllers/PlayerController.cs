@@ -11,10 +11,12 @@ namespace SlotMachineApi.Controllers
     public class PlayerController : ControllerBase
     {
         private readonly IPlayerService _playerService;
+        private readonly IMachineService _machineService;
 
-        public PlayerController(IPlayerService playerService)
+        public PlayerController(IPlayerService playerService, IMachineService machineService)
         {
             _playerService = playerService;
+            _machineService = machineService;   
         }
 
         [HttpPost]
@@ -48,6 +50,23 @@ namespace SlotMachineApi.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpGet]
+        [Route("{username}/{bet}")]
+        public async Task<IActionResult> Bet(string username, double bet)
+        {
+            var user = await _playerService.GetByNameAsync(username);
+            var newBalance = user.Balance - bet;
+            if (newBalance < 0)
+            {
+                return BadRequest();
+            }
+            await _playerService.UpdateBalanceAsync(username,newBalance);
+
+            await _machineService.Create(new Machine());
+
+            var resultArray = _machineService.RefreshArray();
         }
     }
 }

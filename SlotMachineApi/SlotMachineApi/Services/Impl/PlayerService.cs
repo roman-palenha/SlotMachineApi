@@ -10,6 +10,12 @@ namespace SlotMachineApi.Services.Impl
     {
         private readonly IMongoCollection<Player> _playersCollection;
 
+
+        //method bet, refresh arr
+        //endpoint for change game  arr
+        //user balance
+        //update 
+        //game change to machine
         public PlayerService(
            IOptions<SlotMachineDatabaseSettings> slotMachineDatabaseSettings)
         {
