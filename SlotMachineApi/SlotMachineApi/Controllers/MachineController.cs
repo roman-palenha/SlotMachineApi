@@ -21,7 +21,7 @@ namespace SlotMachineApi.Controllers
             return Ok();
         }
         [HttpPost]
-        public async Task<IActionResult> CreateMachine([FromBody]int SlotsSize)
+        public async Task<IActionResult> CreateMachine(int SlotsSize)
         {
             var res = await _machineService.Create(new Machine { SlotsSize = SlotsSize });
             return Ok(res);

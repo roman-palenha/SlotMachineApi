@@ -1,8 +1,13 @@
-﻿namespace SlotMachineApi.Entities
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
+
+namespace SlotMachineApi.Entities
 {
     public class Machine
     {
-        public int Id { get; set; }
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
         public int SlotsSize { get; set; }
     }
 }
