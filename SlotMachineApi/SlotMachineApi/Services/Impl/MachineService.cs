@@ -9,7 +9,6 @@ using static System.Net.Mime.MediaTypeNames;
 namespace SlotMachineApi.Services.Impl
 {
     public class MachineService :  IMachineService
-
     {
         private readonly IMongoCollection<Machine> _machineCollection;
 
@@ -25,6 +24,7 @@ namespace SlotMachineApi.Services.Impl
             _machineCollection = mongoDatabase.GetCollection<Machine>(
             slotMachineDatabaseSettings.Value.MachinesCollectionName);
         }
+
         public int[] ReturnSlotsArray(Machine machine)
         {
             Random randNum = new Random();
@@ -33,6 +33,7 @@ namespace SlotMachineApi.Services.Impl
                 .Repeat(0, machine.SlotsSize)
                 .Select(i => randNum.Next(0, 9))
                 .ToArray();
+
             return slotsArray;
         }
 
@@ -44,17 +45,19 @@ namespace SlotMachineApi.Services.Impl
 
             await _machineCollection.ReplaceOneAsync(x=> x.Id.Equals(machine.Id), machine);
         }
+
         public async Task<Machine> GetById(string id)
         {
             var result = await _machineCollection
                     .Find(x => x.Id.Equals(id))
                     .FirstOrDefaultAsync();
+
             return result;
         }
-        public async Task<Machine> Create(Machine machine)
+
+        public async Task Create(Machine machine)
         {
             await _machineCollection.InsertOneAsync(machine);
-            return machine;
         }
     }
 }

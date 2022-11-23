@@ -63,32 +63,34 @@ namespace SlotMachineApi.Controllers
             var user = await _playerService.GetByNameAsync(username);
             if(user == null)
             {
-                return NotFound();
+                return NotFound("User not found");
             }
+
             var newBalance = user.Balance - bet;
             if (newBalance < 0)
             {
-                return BadRequest();
+                return BadRequest("Negative balance");
             }
 
             var machine = await _machineService.GetById(machineId);
+
             var resultArray = _machineService.ReturnSlotsArray(machine);
+
             var firstNumFromArray = resultArray[0];
-            var consecutiveIdenticalDigits = resultArray.TakeWhile(x => x == firstNumFromArray);
-            var win  = consecutiveIdenticalDigits.Sum(x => x) * bet;
+
+            var win = resultArray
+                .TakeWhile(x => x == firstNumFromArray)
+                .Sum(x => x) 
+                * bet;
+
             newBalance += win;
+
             await _playerService.UpdateBalanceAsync(username, newBalance);
 
             var res = new SpinResult { Slots = resultArray, Balance = newBalance, Win = win };
 
            return Ok(res);
-
         }
-//        The bet should be deducted from the requesting players balance
-//· The result array of the slot machine should be randomly selected as a single digit integer(0-9)
-//for each array cell.the length of the array(size of the slot machine) is configurable and the configuration value is stored in the database.
-//· The win should be calculated as the game bet multiplied by the sum of consecutive identical digits starting from position zero. for example, 3,3,3,4,5 = 9 | 2,3,2 = 2 | 7,7,5,3,1,2,3 = 14
-//· The Win should be added to the player balance.
     }
 
 }
