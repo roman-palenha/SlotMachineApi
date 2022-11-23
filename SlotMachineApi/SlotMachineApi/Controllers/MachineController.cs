@@ -15,6 +15,13 @@ namespace SlotMachineApi.Controllers
             _machineService = machineService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            var res = await _machineService.GetAllAsync();
+            return Ok(res);
+        }
+
         [HttpPut]
         public async Task<IActionResult> ChangeMachine([FromBody]string id, int newSize)
         {

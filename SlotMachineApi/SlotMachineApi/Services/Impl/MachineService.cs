@@ -55,6 +55,13 @@ namespace SlotMachineApi.Services.Impl
             return result;
         }
 
+        public async Task<List<Machine>> GetAllAsync()
+        {
+            var result = await _machineCollection.Find(_ => true).ToListAsync();
+
+            return result;
+        }
+
         public async Task Create(Machine machine)
         {
             await _machineCollection.InsertOneAsync(machine);
