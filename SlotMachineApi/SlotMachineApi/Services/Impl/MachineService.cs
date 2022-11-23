@@ -2,9 +2,6 @@
 using MongoDB.Driver;
 using SlotMachineApi.DbSettings;
 using SlotMachineApi.Entities;
-using System;
-using System.Numerics;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace SlotMachineApi.Services.Impl
 {
@@ -66,6 +63,7 @@ namespace SlotMachineApi.Services.Impl
         {
             if (machine == null && machine.SlotsSize < 0)
                 throw new ArgumentException("Wrong machine data");
+
             await _machineCollection.InsertOneAsync(machine);
         }
     }

@@ -1,12 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SlotMachineApi.DTO;
 using SlotMachineApi.Entities;
 using SlotMachineApi.Services;
-using System.Drawing;
-using System.Reflection.PortableExecutable;
-using System;
-using Machine = SlotMachineApi.Entities.Machine;
 
 namespace SlotMachineApi.Controllers
 {
