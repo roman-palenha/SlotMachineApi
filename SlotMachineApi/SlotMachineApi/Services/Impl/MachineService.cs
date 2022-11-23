@@ -55,7 +55,7 @@ namespace SlotMachineApi.Services.Impl
             return result;
         }
 
-        public async Task<List<Machine>> GetAllAsync()
+        public async Task<IEnumerable<Machine>> GetAllAsync()
         {
             var result = await _machineCollection.Find(_ => true).ToListAsync();
 
@@ -64,6 +64,8 @@ namespace SlotMachineApi.Services.Impl
 
         public async Task Create(Machine machine)
         {
+            if (machine == null && machine.SlotsSize < 0)
+                throw ArgumentException("Wrong machine data");
             await _machineCollection.InsertOneAsync(machine);
         }
     }
