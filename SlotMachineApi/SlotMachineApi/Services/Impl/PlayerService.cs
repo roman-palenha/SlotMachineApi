@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using MongoDB.Bson.Serialization.IdGenerators;
 using MongoDB.Driver;
 using SlotMachineApi.DbSettings;
@@ -61,7 +62,7 @@ namespace SlotMachineApi.Services.Impl
 
             player.Balance = balance;
             
-            await _playersCollection.ReplaceOneAsync(x => x.UserName.ToLower().Equals(username.ToLower()), player);
+            await _playersCollection.ReplaceOneAsync(x => x.UserName.Equals(username), player);
         }
     }
 }
