@@ -65,7 +65,7 @@ namespace SlotMachineApi.Services.Impl
         public async Task Create(Machine machine)
         {
             if (machine == null && machine.SlotsSize < 0)
-                throw ArgumentException("Wrong machine data");
+                throw new ArgumentException("Wrong machine data");
             await _machineCollection.InsertOneAsync(machine);
         }
     }
