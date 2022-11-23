@@ -11,7 +11,7 @@ namespace SlotMachineApi.Services.Impl
     public class MachineService :  IMachineService
 
     {
-        private readonly IMongoCollection<Machine> _gameCollection;
+        private readonly IMongoCollection<Machine> _machineCollection;
 
         public MachineService(
           IOptions<SlotMachineDatabaseSettings> slotMachineDatabaseSettings)
@@ -22,15 +22,15 @@ namespace SlotMachineApi.Services.Impl
             var mongoDatabase = mongoClient.GetDatabase(
                 slotMachineDatabaseSettings.Value.DatabaseName);
 
-            _gameCollection = mongoDatabase.GetCollection<Machine>(
+            _machineCollection = mongoDatabase.GetCollection<Machine>(
             slotMachineDatabaseSettings.Value.MachinesCollectionName);
         }
-        public int[] ReturnSlotsArray(Machine game)
+        public int[] ReturnSlotsArray(Machine machine)
         {
             Random randNum = new Random();
 
             int[] slotsArray = Enumerable
-                .Repeat(0, game.SlotsSize)
+                .Repeat(0, machine.SlotsSize)
                 .Select(i => randNum.Next(0, 9))
                 .ToArray();
             return slotsArray;
@@ -38,23 +38,23 @@ namespace SlotMachineApi.Services.Impl
 
         public async Task RefreshArray(string id, int newSize)
         {
-            var game = await GetById(id);
+            var machine = await GetById(id);
 
-            game.SlotsSize = newSize;
+            machine.SlotsSize = newSize;
 
-            await _gameCollection.ReplaceOneAsync(x=> x.Id.Equals(game.Id), game);
+            await _machineCollection.ReplaceOneAsync(x=> x.Id.Equals(machine.Id), machine);
         }
         public async Task<Machine> GetById(string id)
         {
-            var result = await _gameCollection
+            var result = await _machineCollection
                     .Find(x => x.Id.Equals(id))
                     .FirstOrDefaultAsync();
             return result;
         }
-        public async Task<Machine> Create(Machine game)
+        public async Task<Machine> Create(Machine machine)
         {
-            await _gameCollection.InsertOneAsync(game);
-            return game;
+            await _machineCollection.InsertOneAsync(machine);
+            return machine;
         }
     }
 }

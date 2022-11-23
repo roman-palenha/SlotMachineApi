@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using SlotMachineApi.DTO;
 using SlotMachineApi.Entities;
 using SlotMachineApi.Services;
+using System.Drawing;
+using System.Reflection.PortableExecutable;
+using System;
+using Machine = SlotMachineApi.Entities.Machine;
 
 namespace SlotMachineApi.Controllers
 {
@@ -52,22 +56,37 @@ namespace SlotMachineApi.Controllers
             }
         }
 
-    //    [HttpGet]
-    //    [Route("{username}/{bet}")]
-    //    public async Task<IActionResult> Bet(string username, double bet)
-    //    {
-    //        var user = await _playerService.GetByNameAsync(username);
-    //        var newBalance = user.Balance - bet;
-    //        if (newBalance < 0)
-    //        {
-    //            return BadRequest();
-    //        }
-    //        await _playerService.UpdateBalanceAsync(username,newBalance);
+        [HttpGet]
+        [Route("{username}/{bet}")]
+        public async Task<IActionResult> Bet(string username, double bet)
+        {
+            var user = await _playerService.GetByNameAsync(username);
+            var newBalance = user.Balance - bet;
+            if (newBalance < 0)
+            {
+                return BadRequest();
+            }
+            await _playerService.UpdateBalanceAsync(username, newBalance);
 
-    //        await _machineService.Create(new Machine());
+            var machine = await _machineService.Create(new Machine());
 
-    //      //  var resultArray = _machineService.RefreshArray();
-    //    }
+            var resultArray = _machineService.ReturnSlotsArray(machine);
+            var firstNumFromArray = resultArray[0];
+            var consecutiveIdenticalDigits = resultArray.TakeWhile(x => x == firstNumFromArray);
+            var win  = consecutiveIdenticalDigits.Sum(x => x) * bet;
+
+           await _playerService.UpdateBalanceAsync(username, user.Balance + win);
+
+            var res = new SpinResult { Slots = resultArray, Balance = user.Balance, Win = win };
+
+           return Ok(res);
+
+        }
+//        The bet should be deducted from the requesting players balance
+//· The result array of the slot machine should be randomly selected as a single digit integer(0-9)
+//for each array cell.the length of the array(size of the slot machine) is configurable and the configuration value is stored in the database.
+//· The win should be calculated as the game bet multiplied by the sum of consecutive identical digits starting from position zero. for example, 3,3,3,4,5 = 9 | 2,3,2 = 2 | 7,7,5,3,1,2,3 = 14
+//· The Win should be added to the player balance.
     }
 
 }
