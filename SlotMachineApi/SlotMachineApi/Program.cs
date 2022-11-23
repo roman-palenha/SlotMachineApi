@@ -12,6 +12,7 @@ builder.Services.Configure<SlotMachineDatabaseSettings>(
 builder.Services.AddSingleton<ISlotMachineDatabaseSettings>(provider =>
     provider.GetRequiredService<IOptions<SlotMachineDatabaseSettings>>().Value);
 
+builder.Services.AddScoped<IPlayerService, PlayerService>();
 builder.Services.AddScoped<IMachineService, MachineService>();
 
 builder.Services.AddControllers();

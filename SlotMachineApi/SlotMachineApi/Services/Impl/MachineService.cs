@@ -23,7 +23,7 @@ namespace SlotMachineApi.Services.Impl
                 slotMachineDatabaseSettings.Value.DatabaseName);
 
             _gameCollection = mongoDatabase.GetCollection<Machine>(
-            slotMachineDatabaseSettings.Value.GamesCollectionName);
+            slotMachineDatabaseSettings.Value.MachinesCollectionName);
         }
         public int[] ReturnSlotsArray(Machine game)
         {

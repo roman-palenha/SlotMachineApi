@@ -31,7 +31,7 @@ namespace SlotMachineApi.Services.Impl
 
         public async Task CreateAsync(Player player)
         {
-            if (GetByNameAsync(player.UserName) != null)
+            if (await GetByNameAsync(player.UserName) != null)
                 throw new ArgumentException("There is a user with same username");
 
             await _playersCollection.InsertOneAsync(player);
@@ -45,11 +45,11 @@ namespace SlotMachineApi.Services.Impl
             await _playersCollection.DeleteOneAsync(x => x.UserName.ToLower().Equals(player.UserName.ToLower()));
         }
 
-        public async Task<Player> GetByNameAsync(string username)
+        public async Task<Player?> GetByNameAsync(string username)
         {
-            var result = await _playersCollection
-                    .Find(x => x.UserName.ToLower().Equals(username.ToLower()))
-                    .FirstOrDefaultAsync();
+            var foundUsers = await _playersCollection.FindAsync(x => x.UserName.Equals(username));
+            var result =  foundUsers
+                    .FirstOrDefault();
             return result;
         }
 
