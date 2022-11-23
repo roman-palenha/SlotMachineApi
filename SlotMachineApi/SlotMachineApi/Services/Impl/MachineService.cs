@@ -38,6 +38,11 @@ namespace SlotMachineApi.Services.Impl
         {
             var machine = await GetById(id);
 
+            if(newSize < 0)
+            {
+                throw new ArgumentOutOfRangeException("Size cant be < 0");
+            }
+
             machine.SlotsSize = newSize;
 
             await _machineCollection.ReplaceOneAsync(x=> x.Id.Equals(machine.Id), machine);
@@ -61,7 +66,7 @@ namespace SlotMachineApi.Services.Impl
 
         public async Task Create(Machine machine)
         {
-            if (machine == null && machine.SlotsSize < 0)
+            if (machine == null || machine.SlotsSize < 0)
                 throw new ArgumentException("Wrong machine data");
 
             await _machineCollection.InsertOneAsync(machine);
