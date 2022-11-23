@@ -8,6 +8,6 @@ namespace SlotMachineApi.Services
         int[] ReturnSlotsArray(Machine game);
         Task<Machine> GetById(string id);
         Task Create(Machine game);
-        Task<List<Machine>> GetAllAsync();
+        Task<IEnumerable<Machine>> GetAllAsync();
     }
 }

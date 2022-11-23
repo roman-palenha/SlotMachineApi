@@ -25,15 +25,26 @@ namespace SlotMachineApi.Controllers
         [HttpPut]
         public async Task<IActionResult> ChangeMachine([FromBody]string id, int newSize)
         {
+            if (newSize < 0)
+                return BadRequest("New size is negative");
             await _machineService.RefreshArray(id, newSize);
+
             return Ok();
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateMachine(int slotsSize)
         {
-            await _machineService.Create(new Machine { SlotsSize = slotsSize });
-            return Ok();
+            try
+            {
+                await _machineService.Create(new Machine { SlotsSize = slotsSize });
+                return Ok();
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
         }
     }
 }
