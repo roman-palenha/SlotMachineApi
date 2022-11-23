@@ -29,6 +29,9 @@ namespace SlotMachineApi.Services.Impl
             if (await GetByNameAsync(player.UserName) != null)
                 throw new ArgumentException("There is a user with same username");
 
+            if (player.Balance < 0)
+                throw new ArgumentException("Cannot be a user with negative balance");
+
             await _playersCollection.InsertOneAsync(player);
         }
 
