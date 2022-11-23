@@ -57,7 +57,7 @@ namespace SlotMachineApi.Services.Impl
 
         public async Task<IEnumerable<Machine>> GetAllAsync()
         {
-            var result = await _machineCollection.Find(_ => true).ToListAsync();
+            var result = await _machineCollection.Find( _ => true).ToListAsync();
 
             return result;
         }
