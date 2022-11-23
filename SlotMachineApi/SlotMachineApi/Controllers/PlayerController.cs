@@ -92,5 +92,4 @@ namespace SlotMachineApi.Controllers
            return Ok(res);
         }
     }
-
 }

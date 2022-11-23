@@ -9,6 +9,7 @@ namespace SlotMachineApi.Controllers
     public class MachineController: ControllerBase
     {
         private readonly IMachineService _machineService;
+
         public MachineController(IMachineService machineService)
         {
             _machineService = machineService;
@@ -20,11 +21,12 @@ namespace SlotMachineApi.Controllers
             await _machineService.RefreshArray(id, newSize);
             return Ok();
         }
+
         [HttpPost]
-        public async Task<IActionResult> CreateMachine(int SlotsSize)
+        public async Task<IActionResult> CreateMachine(int slotsSize)
         {
-            var res = await _machineService.Create(new Machine { SlotsSize = SlotsSize });
-            return Ok(res);
+            await _machineService.Create(new Machine { SlotsSize = slotsSize });
+            return Ok();
         }
     }
 }

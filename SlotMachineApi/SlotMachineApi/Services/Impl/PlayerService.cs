@@ -11,12 +11,6 @@ namespace SlotMachineApi.Services.Impl
     {
         private readonly IMongoCollection<Player> _playersCollection;
 
-
-        //method bet, refresh arr
-        //endpoint for change game  arr
-        //user balance
-        //update 
-        //game change to machine
         public PlayerService(
            IOptions<SlotMachineDatabaseSettings> slotMachineDatabaseSettings)
         {
@@ -46,11 +40,18 @@ namespace SlotMachineApi.Services.Impl
             await _playersCollection.DeleteOneAsync(x => x.UserName.ToLower().Equals(player.UserName.ToLower()));
         }
 
+        public async Task<IEnumerable<Player>> GetAllAsync()
+        {
+            var result = await _playersCollection.Find(_ => true).ToListAsync();
+
+            return result;
+        }
+
         public async Task<Player?> GetByNameAsync(string username)
         {
             var foundUsers = await _playersCollection.FindAsync(x => x.UserName.Equals(username));
-            var result =  foundUsers
-                    .FirstOrDefault();
+            var result = await foundUsers.FirstOrDefaultAsync();
+
             return result;
         }
 
