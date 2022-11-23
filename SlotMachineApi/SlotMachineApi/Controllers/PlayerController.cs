@@ -61,6 +61,10 @@ namespace SlotMachineApi.Controllers
         public async Task<IActionResult> Bet([FromRoute] string username, double bet, string machineId)
         {
             var user = await _playerService.GetByNameAsync(username);
+            if(user == null)
+            {
+                return NotFound();
+            }
             var newBalance = user.Balance - bet;
             if (newBalance < 0)
             {
