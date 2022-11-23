@@ -16,10 +16,10 @@ namespace SlotMachineApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAll()
         {
-            var res = await _machineService.GetAllAsync();
-            return Ok(res);
+            var result = await _machineService.GetAllAsync();
+            return Ok(result);
         }
 
         [HttpPut]

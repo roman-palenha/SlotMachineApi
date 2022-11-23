@@ -23,6 +23,13 @@ namespace SlotMachineApi.Controllers
             _machineService = machineService;   
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var result = await _playerService.GetAllAsync();
+            return Ok(result);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Register(RegisterPlayer registerPlayer)
         {
